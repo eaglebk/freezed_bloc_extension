@@ -10,7 +10,7 @@ part '${bloc.eventFileName}';
 part '${bloc.blocName}.freezed.dart';
 
 class ${bloc.blocAsPascal} extends Bloc<${bloc.eventAsPascal},${bloc.stateNameAsPascal}>{
-  ${bloc.blocAsPascal}() : super(const ${bloc.stateNameAsPascal}.${extensionConfig.stateClassConfig.initialState}()){
+  ${bloc.blocAsPascal}() : super(const ${bloc.stateNameAsPascal}()){
     
   }
 }`;

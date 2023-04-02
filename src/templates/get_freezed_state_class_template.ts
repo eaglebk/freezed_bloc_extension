@@ -5,20 +5,26 @@ import { Bloc } from "../model/bloc";
 export function getFreezedStateClassTemplate(bloc: Bloc) {
   return `part of '${bloc.blocFileName}';
 
+enum ${generateStatus(bloc)} {
+  initial,
+  loading,
+  success,
+  failure;
+
+  bool get isInitial => this == ${generateStatus(bloc)}.initial;
+  bool get isLoading => this == ${generateStatus(bloc)}.loading;
+  bool get isSuccess => this == ${generateStatus(bloc)}.success;
+  bool get isFailure => this == ${generateStatus(bloc)}.failure;
+}
+
 @freezed
 class ${bloc.stateNameAsPascal} with _\$${bloc.stateNameAsPascal} {
-  ${generateStates(bloc)}
+  const factory ${bloc.stateNameAsPascal}({
+  @Default(${generateStatus(bloc)}.initial) ${generateStatus(bloc)} status,
+  }) = _${bloc.stateNameAsPascal};
 }`;
 }
 
-function generateStates(bloc: Bloc): string {
-  const isPrivate = extensionConfig.stateClassConfig.isPrivate;
-  const result = extensionConfig.stateClassConfig.defaultStates.map(
-    (e) =>
-      `const factory ${bloc.stateNameAsPascal}.${e}() = ${
-        isPrivate ? "_" : ""
-      }${pascalCase(e)};`
-  );
-
-  return result.join("\n  ");
+function generateStatus(bloc: Bloc): string {
+  return bloc.stateNameAsPascal.replace("State", "Status");
 }
